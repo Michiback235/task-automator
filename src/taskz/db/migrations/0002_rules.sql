@@ -1,0 +1,2 @@
+-- Example seed rule table remains empty; file kept for versioning demo.
+-- Future migrations can add columns, constraints, etc.
