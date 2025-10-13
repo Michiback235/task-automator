@@ -31,7 +31,13 @@ def add_expense(
         return int(cur.lastrowid)
 
 
-def add_rule(target_field: str, pattern: str, value: str, priority: int = 100, enabled: bool = True):
+def add_rule(
+    target_field: str,
+    pattern: str,
+    value: str,
+    priority: int = 100,
+    enabled: bool = True,
+):
     conn = connect()
     with conn:
         conn.execute(
