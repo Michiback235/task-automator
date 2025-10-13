@@ -23,13 +23,16 @@ DEFAULT_CONFIG = {
     "reporting": {"locale": "en_KE", "decimals": 2},
 }
 
+
 def app_dir() -> Path:
     p = Path(os.path.expanduser("~/.task_automator"))
     p.mkdir(parents=True, exist_ok=True)
     return p
 
+
 def config_path() -> Path:
     return app_dir() / "config.toml"
+
 
 def load_config() -> dict:
     path = config_path()
@@ -45,19 +48,20 @@ def load_config() -> dict:
     cfg["reporting"] = DEFAULT_CONFIG["reporting"] | cfg.get("reporting", {})
     return cfg
 
+
 def save_config(cfg: dict) -> None:
     lines = []
     if "database" in cfg:
         lines += ["[database]", f'path = "{cfg["database"]["path"]}"', ""]
-    lines += [f'timezone = "{cfg.get("timezone","Africa/Nairobi")}"']
-    lines += [f'default_currency = "{cfg.get("default_currency","KES")}"', ""]
+    lines += [f'timezone = "{cfg.get("timezone", "Africa/Nairobi")}"']
+    lines += [f'default_currency = "{cfg.get("default_currency", "KES")}"', ""]
     if "files" in cfg:
         files = cfg["files"]
         lines += [
             "[files]",
-            f'default_pattern = "{files.get("default_pattern","{name}.{ext}")}"',
-            f'ignore_globs = "{files.get("ignore_globs","")}"',
-            f'exif_enabled = {str(bool(files.get("exif_enabled", False))).lower()}',
+            f'default_pattern = "{files.get("default_pattern", "{name}.{ext}")}"',
+            f'ignore_globs = "{files.get("ignore_globs", "")}"',
+            f"exif_enabled = {str(bool(files.get('exif_enabled', False))).lower()}",
             "",
         ]
     if "receipts" in cfg:
@@ -68,8 +72,8 @@ def save_config(cfg: dict) -> None:
         rep = cfg["reporting"]
         lines += [
             "[reporting]",
-            f'locale = "{rep.get("locale","en_KE")}"',
-            f'decimals = {int(rep.get("decimals",2))}',
+            f'locale = "{rep.get("locale", "en_KE")}"',
+            f"decimals = {int(rep.get('decimals', 2))}",
             "",
         ]
     config_path().write_text("\n".join(lines))

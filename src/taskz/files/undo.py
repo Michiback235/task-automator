@@ -18,8 +18,7 @@ def record_rename(
 
 def undo_batch(conn: sqlite3.Connection, batch_id: str) -> int:
     rows = conn.execute(
-        "SELECT id, src_path, dest_path, reverted "
-        "FROM rename_op WHERE batch_id=? ORDER BY id DESC",
+        "SELECT id, src_path, dest_path, reverted FROM rename_op WHERE batch_id=? ORDER BY id DESC",
         (batch_id,),
     ).fetchall()
     count = 0

@@ -53,15 +53,15 @@ def _format_token(path: Path, token: str, timezone: str, stat) -> str:
 
 
 def render_pattern(path: Path, pattern: str, timezone: str) -> str:
+    """Render a filename pattern by substituting {tokens} safely."""
     stat = path.stat()
-    parts = []
-    for m in TOKEN_RE.finditer(pattern):
-        token = m.group(1)
-        parts.append(pattern[: m.start()])
-        parts.append(_format_token(path, token, timezone, stat))
-        pattern = pattern[m.end() :]
-    parts.append(pattern)
-    out = "".join(parts)
+
+    def repl(match: re.Match[str]) -> str:
+        token = match.group(1)
+        return _format_token(path, token, timezone, stat)
+
+    out = TOKEN_RE.sub(repl, pattern)
+    # Normalize accidental dots after substitution
     out = out.replace("..", ".").strip(".")
     return out
 
