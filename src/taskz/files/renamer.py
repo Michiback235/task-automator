@@ -5,8 +5,8 @@ import os
 import re
 import shutil
 import uuid
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from taskz.db.connection import connect
 from taskz.files.hashing import file_hash
@@ -18,6 +18,7 @@ from taskz.utils.paths import iter_files, split_name_ext
 log = logging.getLogger(__name__)
 
 TOKEN_RE = re.compile(r"\{([a-zA-Z_:%.0-9-]+)\}")
+
 
 def _format_token(path: Path, token: str, timezone: str, stat) -> str:
     if token == "name":
@@ -50,6 +51,7 @@ def _format_token(path: Path, token: str, timezone: str, stat) -> str:
             return "00000000"
     return ""
 
+
 def render_pattern(path: Path, pattern: str, timezone: str) -> str:
     stat = path.stat()
     parts = []
@@ -63,7 +65,16 @@ def render_pattern(path: Path, pattern: str, timezone: str) -> str:
     out = out.replace("..", ".").strip(".")
     return out
 
-def preview(src: Path, dest: Path, pattern: str, recursive: bool, timezone: str, lowercase: bool, dedupe: bool) -> list[PreviewItem]:
+
+def preview(
+    src: Path,
+    dest: Path,
+    pattern: str,
+    recursive: bool,
+    timezone: str,
+    lowercase: bool,
+    dedupe: bool,
+) -> list[PreviewItem]:
     files = list(iter_files(src, recursive=recursive))
     results: list[PreviewItem] = []
     counters: dict[str, int] = {}
@@ -90,6 +101,7 @@ def preview(src: Path, dest: Path, pattern: str, recursive: bool, timezone: str,
         results.append(PreviewItem(src=p, dest=target, conflict=conflict))
         seen.add(target)
     return results
+
 
 def execute(previews: Iterable[PreviewItem], yes: bool, batch_id: str | None = None) -> int:
     n = 0

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+
 def setup_logging(verbose: bool = False, quiet: bool = False) -> None:
     level = logging.INFO
     if verbose:

@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from click.testing import CliRunner
+
 from taskz.cli import cli
+
 
 def test_files_rename_preview_and_execute(sample_files):
     runner = CliRunner()
@@ -14,7 +18,15 @@ def test_files_rename_preview_and_execute(sample_files):
     # execute
     res2 = runner.invoke(
         cli,
-        ["files", "rename", "--src", str(sample_files), "--pattern", "{created:%Y-%m-%d}_{name}.{ext}", "--yes"],
+        [
+            "files",
+            "rename",
+            "--src",
+            str(sample_files),
+            "--pattern",
+            "{created:%Y-%m-%d}_{name}.{ext}",
+            "--yes",
+        ],
     )
     assert res2.exit_code == 0
     assert "Executed batch" in res2.output

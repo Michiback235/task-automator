@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from bs4 import BeautifulSoup
 
+
 def detect_vendor(html: str) -> str | None:
     soup = BeautifulSoup(html, "lxml")
     text = soup.get_text(" ").lower()

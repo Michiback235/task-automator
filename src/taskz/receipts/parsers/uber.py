@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from bs4 import BeautifulSoup
 
 from taskz.receipts.normalize import NormalizedReceipt, clean_text
+
 
 def parse(html: str) -> NormalizedReceipt:
     soup = BeautifulSoup(html, "lxml")
@@ -15,11 +17,11 @@ def parse(html: str) -> NormalizedReceipt:
     if m:
         cur = m.group(1)
         total = float(m.group(2))
-    dt = datetime.now(timezone.utc)
+    dt = datetime.now(UTC)
     dm = re.search(r"([A-Z][a-z]{2,}\s+\d{1,2},\s+\d{4}\s+\d{2}:\d{2})", txt)
     if dm:
         try:
-            dt = datetime.strptime(dm.group(1), "%B %d, %Y %H:%M").astimezone(timezone.utc)
+            dt = datetime.strptime(dm.group(1), "%B %d, %Y %H:%M").astimezone(UTC)
         except Exception:
             pass
     return NormalizedReceipt(

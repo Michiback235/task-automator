@@ -5,6 +5,7 @@ import sqlite3
 from taskz.db.connection import connect
 from taskz.utils.currency import to_gross
 
+
 def add_expense(
     date: str,
     merchant: str,
@@ -19,24 +20,32 @@ def add_expense(
     gross = to_gross(amount, tax)
     with conn:
         cur = conn.execute(
-            """
-            INSERT INTO expense(date, merchant, category, description, amount_net, tax, amount_gross, currency, tags_csv, source)
-            VALUES (?,?,?,?,?,?,?,?,?,'manual')
-            """,
+            (
+                "INSERT INTO expense("
+                "date, merchant, category, description, amount_net, tax, "
+                "amount_gross, currency, tags_csv, source"
+                ") VALUES (?,?,?,?,?,?,?,?,?,'manual')"
+            ),
             (date, merchant, category, description, amount, tax, gross, currency, tags_csv),
         )
         return int(cur.lastrowid)
+
 
 def add_rule(target_field: str, pattern: str, value: str, priority: int = 100, enabled: bool = True):
     conn = connect()
     with conn:
         conn.execute(
-            "INSERT INTO rule(target_field, pattern, action, value, priority, enabled) VALUES (?,?,?,?,?,?)",
+            (
+                "INSERT INTO rule(target_field, pattern, action, value, priority, enabled) "
+                "VALUES (?,?,?,?,?,?)"
+            ),
             (target_field, pattern, "set", value, priority, 1 if enabled else 0),
         )
 
+
 def list_rules() -> list[sqlite3.Row]:
     return connect().execute("SELECT * FROM rule ORDER BY enabled DESC, priority ASC").fetchall()
+
 
 def apply_rules() -> int:
     conn = connect()
@@ -51,14 +60,15 @@ def apply_rules() -> int:
         if field == "category":
             with conn:
                 cur = conn.execute(
-                    """
-                    UPDATE expense SET category=?
-                    WHERE (merchant LIKE '%'||?||'%' OR description LIKE '%'||?||'%')
-                    """,
+                    (
+                        "UPDATE expense SET category=? "
+                        "WHERE (merchant LIKE '%'||?||'%' OR description LIKE '%'||?||'%')"
+                    ),
                     (value, pat, pat),
                 )
                 updated += cur.rowcount or 0
     return updated
+
 
 def query_expenses(since: str | None = None, until: str | None = None, category: str | None = None):
     conn = connect()

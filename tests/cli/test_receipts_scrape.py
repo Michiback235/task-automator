@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from click.testing import CliRunner
+
 from taskz.cli import cli
 from taskz.db.connection import connect
+
 
 def test_receipts_scrape(receipts_dir):
     runner = CliRunner()

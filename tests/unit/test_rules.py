@@ -1,5 +1,8 @@
-from taskz.expenses.models import add_expense, add_rule, apply_rules
+from __future__ import annotations
+
 from taskz.db.connection import connect
+from taskz.expenses.models import add_expense, add_rule, apply_rules
+
 
 def test_rules_apply_to_merchant():
     add_expense("2025-10-12", "Uber", 450, "KES")

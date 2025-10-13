@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from bs4 import BeautifulSoup
 
 from taskz.receipts.normalize import NormalizedReceipt, clean_text
+
 
 def parse(html: str) -> NormalizedReceipt:
     soup = BeautifulSoup(html, "lxml")
@@ -19,7 +21,7 @@ def parse(html: str) -> NormalizedReceipt:
     om = re.search(r"Order\s*#\s*([A-Z0-9-]+)", txt, re.IGNORECASE)
     if om:
         ref = om.group(1)
-    dt = datetime.now(timezone.utc).isoformat()
+    dt = datetime.now(UTC).isoformat()
     return NormalizedReceipt(
         merchant="Jumia",
         datetime_utc=dt,

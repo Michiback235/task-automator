@@ -2,15 +2,24 @@ from __future__ import annotations
 
 import sqlite3
 
-def record_rename(conn: sqlite3.Connection, batch_id: str, src: str, dest: str, file_hash: str | None):
+
+def record_rename(
+    conn: sqlite3.Connection,
+    batch_id: str,
+    src: str,
+    dest: str,
+    file_hash: str | None,
+):
     conn.execute(
         "INSERT INTO rename_op(batch_id, src_path, dest_path, file_hash) VALUES (?,?,?,?)",
         (batch_id, src, dest, file_hash),
     )
 
+
 def undo_batch(conn: sqlite3.Connection, batch_id: str) -> int:
     rows = conn.execute(
-        "SELECT id, src_path, dest_path, reverted FROM rename_op WHERE batch_id=? ORDER BY id DESC",
+        "SELECT id, src_path, dest_path, reverted "
+        "FROM rename_op WHERE batch_id=? ORDER BY id DESC",
         (batch_id,),
     ).fetchall()
     count = 0

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import sqlite3
+
 from taskz.db.connection import connect
+
 
 def monthly_summary(since: str, until: str) -> list[sqlite3.Row]:
     conn = connect()
@@ -15,6 +17,7 @@ def monthly_summary(since: str, until: str) -> list[sqlite3.Row]:
         """,
         (since, until),
     ).fetchall()
+
 
 def merchant_summary(since: str, until: str) -> list[sqlite3.Row]:
     conn = connect()
