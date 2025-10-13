@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import glob
-import json
 import logging
 import sqlite3
 from pathlib import Path

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 def ensure_parent_dir(path: Path) -> None:

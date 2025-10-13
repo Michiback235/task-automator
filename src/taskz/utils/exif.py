@@ -17,7 +17,6 @@ def exif_datetime_original(path: Path) -> datetime | None:
             exif = img.getexif()
             if not exif:
                 return None
-            # Find the tag for DateTimeOriginal
             key = None
             for k, v in ExifTags.TAGS.items():
                 if v == "DateTimeOriginal":
@@ -26,7 +25,6 @@ def exif_datetime_original(path: Path) -> datetime | None:
             if key is None or key not in exif:
                 return None
             value = exif.get(key)
-            # format "YYYY:MM:DD HH:MM:SS"
             return datetime.strptime(str(value), "%Y:%m:%d %H:%M:%S")
     except Exception:
         return None

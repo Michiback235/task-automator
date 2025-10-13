@@ -1,8 +1,7 @@
-from pathlib import Path
 from click.testing import CliRunner
 from taskz.cli import cli
 
-def test_files_rename_preview_and_execute(sample_files, monkeypatch):
+def test_files_rename_preview_and_execute(sample_files):
     runner = CliRunner()
     # preview (no --yes)
     res = runner.invoke(

@@ -17,7 +17,6 @@ def undo_batch(conn: sqlite3.Connection, batch_id: str) -> int:
     for r in rows:
         if r["reverted"]:
             continue
-        # swap back on disk best-effort; DB layer only marks reverted
         conn.execute("UPDATE rename_op SET reverted=1 WHERE id=?", (r["id"],))
         count += 1
     conn.commit()

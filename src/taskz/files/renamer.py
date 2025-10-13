@@ -5,7 +5,6 @@ import os
 import re
 import shutil
 import uuid
-from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
@@ -30,7 +29,6 @@ def _format_token(path: Path, token: str, timezone: str, stat) -> str:
     if token.startswith("created"):
         fmt = "%Y-%m-%d"
         if ":" in token:
-            # created:%Y-%m-%d_%H-%M-%S
             fmt = token.split(":", 1)[1]
         dt = localize(stat.st_ctime, timezone)
         return dt.strftime(fmt)
@@ -41,10 +39,9 @@ def _format_token(path: Path, token: str, timezone: str, stat) -> str:
         dt = localize(stat.st_mtime, timezone)
         return dt.strftime(fmt)
     if token == "counter":
-        # will be filled later by caller
         return "{__COUNTER__}"
     if token.startswith("exif:"):
-        # optional EXIF support handled in CLI with --exif flag; token kept as-is if missing
+        # EXIF optional; token evaluates empty when unavailable
         return ""
     if token == "hash8":
         try:
@@ -63,7 +60,6 @@ def render_pattern(path: Path, pattern: str, timezone: str) -> str:
         pattern = pattern[m.end() :]
     parts.append(pattern)
     out = "".join(parts)
-    # sanitize double dots or empty ext
     out = out.replace("..", ".").strip(".")
     return out
 

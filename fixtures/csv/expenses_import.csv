@@ -1,3 +1,3 @@
 date,merchant,amount,currency,category,description,tax,tags
-2025-10-11,Cafe Java,320,KES,Food,Coffee and snack,0,coffee,break
-2025-10-12,Uber,450,KES,Transport,Evening ride,0,ride,work
+2025-10-11,Cafe Java,320,KES,Food,"Coffee and snack",0,"coffee,break"
+2025-10-12,Uber,450,KES,Transport,"Evening ride",0,"ride,work"

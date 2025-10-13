@@ -24,6 +24,8 @@ dev = [
   "pytest-cov>=5.0",
   "ruff>=0.6",
   "black>=24.8",
+  "mypy>=1.10",
+  "pre-commit>=3.8",
 ]
 exif = ["Pillow>=10.4"]
 pdf = ["pdfminer.six>=20231228"]
@@ -39,3 +41,18 @@ target-version = ["py311"]
 line-length = 100
 target-version = "py311"
 select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+ignore_missing_imports = true
+strict_optional = false
+disallow_untyped_defs = false
+show_error_codes = true
+
+[tool.pytest.ini_options]
+addopts = "-q"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/taskz"]
+include = ["LICENSE", "README.md", "CHANGELOG.md"]

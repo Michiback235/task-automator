@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sqlite3
-from typing import Iterable
 
 from taskz.db.connection import connect
 from taskz.utils.currency import to_gross
@@ -49,9 +48,8 @@ def apply_rules() -> int:
         field = r["target_field"]
         pat = r["pattern"]
         value = r["value"]
-        # apply to merchant or description; simple LIKE for MVP
-        with conn:
-            if field == "category":
+        if field == "category":
+            with conn:
                 cur = conn.execute(
                     """
                     UPDATE expense SET category=?

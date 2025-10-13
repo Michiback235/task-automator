@@ -14,6 +14,8 @@ from taskz.files.renamer import preview as preview_renames, execute as execute_r
 from taskz.receipts.ingest import scrape_from_path
 from taskz.expenses.models import add_expense, add_rule, list_rules, apply_rules
 from taskz.expenses.reports import monthly_summary, merchant_summary
+from taskz.expenses.importers import import_csv
+from taskz.expenses.exporters import export_csv
 
 APP_DIR = Path.home() / ".task_automator"
 MIGRATIONS_DIR = Path(__file__).parent / "db" / "migrations"
@@ -80,7 +82,6 @@ def files_rename(src: Path, dest: Path | None, recursive: bool, pattern: str, lo
     dest = dest or src
     previews = preview_renames(src, dest, pattern, recursive, tz, lowercase, dedupe)
     batch = uuid.uuid4().hex[:8]
-    changed = 0
     for it in previews:
         rel = safe_rel(src, it.src)
         click.echo(f"{rel} -> {it.dest.name}{'  [CONFLICT]' if it.conflict else ''}")
@@ -182,6 +183,22 @@ def report_merchant(since, until):
     click.echo("----------------------------------")
     for r in rows:
         click.echo(f"{r['merchant']:<28} {r['total']:.2f}")
+
+@expenses.command("import")
+@click.option("--csv", "csv_path", type=click.Path(path_type=Path, exists=True, dir_okay=False), required=True)
+@click.option("--currency-default", default="KES")
+def exp_import(csv_path: Path, currency_default: str):
+    n = import_csv(csv_path, currency_default)
+    click.echo(f"Imported {n} expenses")
+
+@expenses.command("export")
+@click.option("--csv", "csv_path", type=click.Path(path_type=Path, dir_okay=False), required=True)
+@click.option("--since", default=None)
+@click.option("--until", default=None)
+@click.option("--category", default=None)
+def exp_export(csv_path: Path, since: str | None, until: str | None, category: str | None):
+    n = export_csv(csv_path, since=since, until=until, category=category)
+    click.echo(f"Exported {n} rows to {csv_path}")
 
 def main():
     cli()

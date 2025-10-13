@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import os
-import tomli as tomllib  # py3.11: stdlib tomllib; pyproject pins fallback for older
 from pathlib import Path
+
+try:  # Python 3.11+
+    import tomllib  # type: ignore
+except Exception:  # pragma: no cover
+    import tomli as tomllib  # type: ignore
 
 DEFAULT_CONFIG = {
     "database": {"path": "~/.task_automator/taskz.db"},
@@ -34,7 +38,6 @@ def load_config() -> dict:
         return DEFAULT_CONFIG
     with path.open("rb") as f:
         data = tomllib.load(f)
-    # merge defaults shallowly
     cfg = DEFAULT_CONFIG | data
     cfg["database"] = DEFAULT_CONFIG["database"] | cfg.get("database", {})
     cfg["files"] = DEFAULT_CONFIG["files"] | cfg.get("files", {})
@@ -43,7 +46,6 @@ def load_config() -> dict:
     return cfg
 
 def save_config(cfg: dict) -> None:
-    # Write TOML minimally; avoid extra dep by manual formatting
     lines = []
     if "database" in cfg:
         lines += ["[database]", f'path = "{cfg["database"]["path"]}"', ""]

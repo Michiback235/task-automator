@@ -1,7 +1,6 @@
-from pathlib import Path
 from taskz.files.renamer import render_pattern
 
-def test_render_basic(tmp_path, monkeypatch):
+def test_render_basic(tmp_path):
     p = tmp_path / "X.txt"
     p.write_text("x")
     out = render_pattern(p, "{name}.{ext}", "UTC")

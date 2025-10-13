@@ -15,7 +15,6 @@ def parse(html: str) -> NormalizedReceipt:
     if m:
         cur = m.group(1)
         total = float(m.group(2))
-    # order number as reference
     ref = None
     om = re.search(r"Order\s*#\s*([A-Z0-9-]+)", txt, re.IGNORECASE)
     if om:
