@@ -1,4 +1,4 @@
-# TaskZ — Task-Automator CLI (Python + Click + SQLite)
+# TaskZ - Task-Automator CLI (Python + Click + SQLite)
 
 A pragmatic CLI to:
 - **Bulk-rename files** safely with previews, counters, EXIF date (optional), and undo.
